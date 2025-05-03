@@ -1,0 +1,63 @@
+import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+df = pd.read_csv('datasets/weatherAUS.csv')
+print(df.head(5))
+print(df.tail(5))
+print("\nDataset information:")
+print(df.info())
+
+print("\nSummary statistics (including object types):")
+df.describe(include='all')
+
+print("\nMissing values per column:")
+print(df.isnull().sum())
+
+print("\nShape of dataset (rows, columns):")
+print(df.shape)
+
+print("\nOriginal data types:")
+print(df.dtypes)
+
+# 5.2 Convert 'Date' column to datetime
+df['Date'] = pd.to_datetime(df['Date'], errors='coerce')
+
+# 5.3 Fill missing categorical values with mode
+categorical_cols = df.select_dtypes(include='object').columns
+for col in categorical_cols:
+    df[col].fillna(df[col].mode()[0], inplace=True)
+
+# 5.4 Fill missing numeric values with mean
+numeric_cols = df.select_dtypes(include=['float64', 'int64']).columns
+for col in numeric_cols:
+    df[col].fillna(df[col].mean(), inplace=True)
+
+df.info()
+
+# Step 6: Convert Categorical Variables to Quantitative
+
+# 6.1 Convert 'RainToday' and 'RainTomorrow' to binary
+df['RainToday_encoded'] = df['RainToday'].map({'No': 0, 'Yes': 1})
+df['RainTomorrow_encoded'] = df['RainTomorrow'].map({'No': 0, 'Yes': 1})
+
+# 6.2 Encode other categorical variables using label encoding
+from sklearn.preprocessing import LabelEncoder
+
+label_encoders = {}
+for col in categorical_cols:
+    if col not in ['RainToday', 'RainTomorrow']:
+        le = LabelEncoder()
+        df[col] = le.fit_transform(df[col])
+        label_encoders[col] = le  # Save encoder if needed later
+
+# Final encoded preview
+print("\nSample of encoded data:")
+print(df[['RainToday', 'RainToday_encoded', 'RainTomorrow', 'RainTomorrow_encoded']].head())
+
+# Final DataFrame Info
+print("\nFinal DataFrame info after cleaning and encoding:")
+print(df.info())
+
+
