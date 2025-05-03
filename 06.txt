@@ -1,0 +1,62 @@
+import numpy as np
+import pandas as pd
+from sklearn.model_selection import train_test_split
+from sklearn.naive_bayes import GaussianNB
+import matplotlib.pyplot as plt
+import seaborn as sns
+from sklearn.metrics import confusion_matrix,ConfusionMatrixDisplay,classification_report,accuracy_score, precision_score, recall_score, f1_score
+from sklearn.preprocessing import LabelEncoder
+
+df = pd.read_csv('datasets/Iris.csv')
+
+df.head()
+
+df.describe()
+
+df.isnull().sum()
+
+x = df.drop(['Species'], axis=1)
+y = df['Species']
+print(x)
+print(y)
+print(x.shape)
+print(y.shape)
+
+x_train,x_test,y_train,y_test = train_test_split(x,y,test_size = 0.2,random_state=0)
+print(x_train.shape)
+print(x_test.shape)
+print(y_train.shape)
+print(y_test.shape)
+
+# Train Naïve Bayes model
+model = GaussianNB()
+model.fit(x_train, y_train)
+y_pred = model.predict(x_test)
+
+# Confusion Matrix
+cm = confusion_matrix(y_test, y_pred, labels=model.classes_)
+print("Confusion Matrix:\n", cm)
+
+conf_matrix = ConfusionMatrixDisplay(confusion_matrix=cm,display_labels=model.classes_)
+conf_matrix.plot(cmap='Blues')
+plt.show()
+
+# Accuracy, Precision, Recall, Error Rate
+accuracy = accuracy_score(y_test, y_pred)
+precision = precision_score(y_test, y_pred, average='macro')
+recall = recall_score(y_test, y_pred, average='macro')
+error_rate = 1 - accuracy
+
+print("\nAccuracy:", round(accuracy, 4))
+print("Error Rate:", round(error_rate, 4))
+print("Precision:", round(precision, 4))
+print("Recall:", round(recall, 4))
+
+tp, fn, fp, tn = confusion_matrix(y_test == "Iris-setosa", y_pred == "Iris-setosa").ravel()
+print("\nTrue Positives (TP):", tp)
+print("False Negatives (FN):", fn)
+print("False Positives (FP):", fp)
+print("True Negatives (TN):", tn)
+print("\nClassification Report:\n", classification_report(y_test, y_pred, target_names=model.classes_))
+print("\nF1 Score:", round(f1_score(y_test, y_pred, average='macro'), 4))
+

@@ -1,0 +1,13 @@
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+df = pd.read_csv('datasets/titanic_train.csv')
+df.head()
+
+sns.boxplot(x='Sex', y='Age', hue='Survived', data=df)
+
+sns.barplot(x='Sex', y='Age', hue='Survived', data=df)
+
+sns.boxplot(x=df['Sex'], y=df["Age"])

@@ -1,0 +1,88 @@
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+df = pd.read_csv('datasets/Iris.csv')
+
+print("Head")
+df.head()
+
+
+print("Mean")
+df.mean(numeric_only=True)
+
+print("Median")
+df.median(numeric_only=True)
+
+print("Mode")
+df.mode()
+
+
+
+print("Standard Deviation")
+df.std(numeric_only=True)
+
+print("Variance")
+df.var(numeric_only=True)
+
+print("Minimum")
+df.min()
+
+print("Maximum")
+df.max()
+
+print("Info")
+df.info()
+
+print("Features and their types:")
+for column in df.columns:
+    if df[column].dtype == 'float64' or df[column].dtype == 'int64':
+        print(f"- {column}: Numeric")
+    else:
+        print(f"- {column}: Nominal")
+
+# Create a histogram for each feature
+print("\nCreating histograms for each feature...")
+fig, axes = plt.subplots(2, 2, figsize=(12, 8))
+
+axes[0,0].set_title('Sepal Length')
+axes[0,0].hist(df['SepalLengthCm'])
+axes[0,0].set_ylabel('Frequency')
+
+axes[0,1].set_title('Sepal Width')
+axes[0,1].hist(df['SepalWidthCm'])
+axes[0,1].set_ylabel('Frequency')
+
+axes[1,0].set_title('Petal Length')
+axes[1,0].hist(df['PetalLengthCm'])
+axes[1,0].set_ylabel('Frequency')
+
+axes[1,1].set_title('Petal Width')
+axes[1,1].hist(df['PetalWidthCm'])
+axes[1,1].set_ylabel('Frequency')
+
+plt.show()
+
+fig, axes = plt.subplots(2, 2, figsize=(16,9))
+axes[0,0].set_title("Distribution of Sepal Length")
+sns.boxplot(y="SepalLengthCm", x="Species", data=df, orient='v', ax=axes[0,0])
+axes[0,1].set_title("Distribution of Sepal Length")
+sns.boxplot(y="SepalWidthCm", x="Species", data=df, orient='v', ax=axes[0,1])
+axes[1,0].set_title("Distribution of Sepal Length")
+sns.boxplot(y="PetalLengthCm", x="Species", data=df, orient='v', ax=axes[1,0])
+axes[1,1].set_title("Distribution of Sepal Length")
+sns.boxplot(y="PetalLengthCm", x="Species", data=df, orient='v', ax=axes[1,1])
+plt.show()
+
+for column in df.columns[:-1]:
+    Q1, Q3 = df[column].quantile(0.25), df[column].quantile(0.75)
+    IQR = Q3 - Q1
+    lower_bound, upper_bound = Q1 - 1.5 * IQR, Q3 + 1.5 * IQR
+    outliers = df[(df[column] < lower_bound) | (df[column] > upper_bound)]
+    if outliers.empty:
+        print(f"- {column}: No outliers")
+    else:
+        print(f"- {column}: Outliers detected")
+
+

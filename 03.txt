@@ -1,0 +1,54 @@
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+df = pd.read_csv('datasets/Employee_Salary_Dataset.csv')
+df.head()
+
+print("Mean")
+print(df.mean(numeric_only=True))
+print("\nMedian")
+print(df.median(numeric_only=True))
+print("\nMinimum")
+print(df.min(numeric_only=True))
+print("\nMaximum")
+print(df.max(numeric_only=True))
+print("\nStandard Deviation")
+print(df.std(numeric_only=True))
+print("\nSummary Statistics")
+print(df.describe(include='all'))
+print("\nCorrelation Matrix")
+print(df.corr(numeric_only=True))
+
+df.loc[:,'Age'].std()
+
+# Group by categorical variable and get summary statistics
+grouped = df.groupby('Age')['Salary'].agg(['mean', 'median', 'min', 'max', 'std'])
+print(grouped)
+# Create list of incomes grouped by category
+grouped_list = df.groupby('Age')['Salary'].apply(list)
+print(grouped_list)
+
+dff = pd.read_csv('datasets/Iris.csv')
+dff.head()
+
+iris = dff.groupby('Species')
+
+print("Percentiles")
+print(iris.describe(percentiles=[.25, .5, .75]))
+print("\nMean")
+print(iris.mean(numeric_only=True))
+print("\nMedian")
+print(iris.median(numeric_only=True))
+print("\nQuantiles")
+print(iris.quantile(numeric_only=True))
+print("\nStandard Deviation")
+print(iris.std(numeric_only=True))
+print("\nMinimum")
+print(iris.min(numeric_only=True))
+print("\nMaximum")
+print(iris.max(numeric_only=True))
+print("\nSummary Statistics")
+print(iris.describe(include='all'))
+

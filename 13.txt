@@ -1,0 +1,26 @@
+// PS : Write a simple program in SCALA using Apache Spark framework --Don
+
+// Steps to run this on terminal:-
+// cd ~
+// check :- scala -version 
+    // If not then :- sudo apt-get install scala
+// write code :- vi CheckNum.scala
+// to see code :- cat CheckNum.scala
+// to save and exit :- :wq
+// compile :- scalac CheckNum.scala
+// run :- scala CheckNum
+
+import scala.io.StdIn._
+object CheckNum {
+    def main(args: Array[String]): Unit = {
+        println("Enter a number:")
+        val num = readInt()
+        if (num > 0) {
+            println("Positive number")
+        } else if (num < 0) {
+            println("Negative number")
+        } else {
+            println("Zero")
+        }
+    }
+}

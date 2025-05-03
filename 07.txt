@@ -1,0 +1,99 @@
+import pandas as pd
+import nltk
+import re
+from nltk.tokenize import sent_tokenize
+from nltk.tokenize import word_tokenize
+from nltk.corpus import stopwords
+from nltk.stem import PorterStemmer, WordNetLemmatizer
+from nltk.tokenize import word_tokenize
+
+import spacy
+from sklearn.feature_extraction.text import TfidfVectorizer
+
+nltk.download('punkt')
+nltk.download('averaged_perceptron_tagger')
+nltk.download('stopwords')
+nltk.download('wordnet')
+
+text="Tokenization is the first step in text analytics. The process of breaking down a text paragraph into smaller chunks such as words or sentences is called Tokenization."
+print(text)
+
+# 1. Tokenization
+tokens = word_tokenize(text)
+print("\nTokenization:\n", tokens)
+
+# 2. POS Tagging
+pos_tags = nltk.pos_tag(tokens)
+print("\nPOS Tagging:\n", pos_tags)
+
+# 3. Stop Words Removal
+stop_words = set(stopwords.words('english'))
+tokens_without_sw = [word for word in tokens if word.lower() not in stop_words]
+print("\nTokens after Stop Words Removal:\n", tokens_without_sw)
+
+# 4. Stemming
+stemmer = PorterStemmer()
+stemmed_tokens = [stemmer.stem(word) for word in tokens_without_sw]
+print("\nStemming:\n", stemmed_tokens)
+
+# 5. Lemmatization
+lemmatizer = WordNetLemmatizer()
+lemmatized_tokens = [lemmatizer.lemmatize(word, pos='v') for word in tokens_without_sw]
+print("\nLemmatization:\n", lemmatized_tokens)
+
+# 6. TF-IDF Representation : Appropriate
+documents = [text]  # List of one document
+
+# Initialize TF-IDF Vectorizer
+vectorizer = TfidfVectorizer()
+
+# Fit and transform
+tfidf_matrix = vectorizer.fit_transform(documents)
+
+# Get feature names
+terms = vectorizer.get_feature_names_out()
+
+# Convert to array
+tfidf_array = tfidf_matrix.toarray()
+
+# Print TF-IDF scores
+print("\nTF-IDF Representation:\n")
+for i in range(len(terms)):
+    print("Term:", terms[i], "TF-IDF:", round(tfidf_array[0][i], 4))
+
+# 6. TF-IDF Representation : Approx
+def calculate_tf_idf(documents):
+    # Tokenize the document
+    tokens = word_tokenize(documents[0])
+    
+    # Calculate Term Frequency (TF)
+    tf = {}
+    for word in tokens:
+        if word in tf:
+            tf[word] += 1
+        else:
+            tf[word] = 1
+    
+    # Calculate Inverse Document Frequency (IDF)
+    n_documents = len(documents)
+    idf = {}
+    for word in tokens:
+        count = sum(1 for doc in documents if word in doc)
+        idf[word] = n_documents / count
+    
+    # Calculate TF-IDF
+    tf_idf = {word: tf[word] * idf[word] for word in tf}
+    
+    return tf_idf
+
+# Example usage
+documents = [text]
+tf_idf = calculate_tf_idf(documents)
+print("\nCustom TF-IDF Representation:\n")
+for word, score in tf_idf.items():
+    print(f"Term: {word}, TF-IDF: {score:.4f}")
+
+
+
+
+
