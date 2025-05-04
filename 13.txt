@@ -2,9 +2,10 @@
 
 // Steps to run this on terminal:-
 // cd ~
-// check :- scala -version 
+// check :- scala -version and shell
     // If not then :- sudo apt-get install scala
 // write code :- vi CheckNum.scala
+                  :q
 // to see code :- cat CheckNum.scala
 // to save and exit :- :wq
 // compile :- scalac CheckNum.scala
